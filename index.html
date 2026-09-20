@@ -9,7 +9,6 @@
 https://cdn.jsdelivr.net/npm/chart.jsscript>
 
 <style>
-
 body{
     font-family: Arial, sans-serif;
     background:#f4f7fb;
@@ -41,6 +40,12 @@ h1{
     margin:15px 0;
 }
 
+label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:5px;
+}
+
 select{
     width:100%;
     padding:10px;
@@ -63,32 +68,29 @@ button:hover{
 }
 
 #result{
-    margin-top:25px;
-    background:#eef6ff;
+    margin-top:20px;
     padding:20px;
     border-radius:10px;
+    background:#eef6ff;
 }
 
 canvas{
     margin-top:20px;
 }
-
 </style>
-</head>
 
+</head>
 <body>
 
 <div class="container">
 
-<h1>Investor Risk Assessment</h1>
-
-<!-- Traditional Risk Profiling -->
+<h1>Investor Profiling and Risk Assessment</h1>
 
 <div class="section">
 <h2>1. Traditional Risk Profiling</h2>
 
 <div class="question">
-年齡
+<label>Age</label>
 <select id="age">
 <option value="1">60歲以上</option>
 <option value="2">46-60歲</option>
@@ -99,18 +101,18 @@ canvas{
 </div>
 
 <div class="question">
-月收入
+<label>Income</label>
 <select id="income">
-<option value="1">3萬以下</option>
-<option value="2">3-5萬</option>
-<option value="3">5-10萬</option>
-<option value="4">10-20萬</option>
-<option value="5">20萬以上</option>
+<option value="1">3萬元以下</option>
+<option value="2">3-5萬元</option>
+<option value="3">5-10萬元</option>
+<option value="4">10-20萬元</option>
+<option value="5">20萬元以上</option>
 </select>
 </div>
 
 <div class="question">
-可投資資產
+<label>Wealth</label>
 <select id="wealth">
 <option value="1">10萬以下</option>
 <option value="2">10-50萬</option>
@@ -121,7 +123,7 @@ canvas{
 </div>
 
 <div class="question">
-投資期限
+<label>Investment Horizon</label>
 <select id="horizon">
 <option value="1">1年以下</option>
 <option value="2">1-3年</option>
@@ -132,20 +134,20 @@ canvas{
 </div>
 
 <div class="question">
-投資目標
+<label>Financial Goal</label>
 <select id="goal">
 <option value="1">保本</option>
 <option value="2">教育基金</option>
-<option value="3">買房規劃</option>
+<option value="3">購屋規劃</option>
 <option value="4">財富累積</option>
 <option value="5">退休規劃</option>
 </select>
 </div>
 
 <div class="question">
-損失承受能力
+<label>Loss Capacity</label>
 <select id="loss">
-<option value="1">無法接受</option>
+<option value="1">無法接受損失</option>
 <option value="2">很難接受</option>
 <option value="3">尚可接受</option>
 <option value="4">可以接受</option>
@@ -154,7 +156,7 @@ canvas{
 </div>
 
 <div class="question">
-風險偏好
+<label>Risk Tolerance</label>
 <select id="tolerance">
 <option value="1">非常保守</option>
 <option value="2">保守</option>
@@ -163,26 +165,23 @@ canvas{
 <option value="5">非常積極</option>
 </select>
 </div>
-
 </div>
-
-<!-- Behavioral -->
 
 <div class="section">
 <h2>2. Behavioral & Emotional Assessment</h2>
 
 <div class="question">
-若投資組合下跌20%
+<label>投資組合下跌20%時，你會？</label>
 <select id="emotion1">
 <option value="1">全部賣出</option>
 <option value="2">部分賣出</option>
-<option value="3">持有觀察</option>
+<option value="3">繼續觀察</option>
 <option value="5">逢低加碼</option>
 </select>
 </div>
 
 <div class="question">
-市場劇烈波動時
+<label>市場劇烈波動時，你的反應？</label>
 <select id="emotion2">
 <option value="1">非常焦慮</option>
 <option value="2">有點擔心</option>
@@ -192,25 +191,23 @@ canvas{
 </div>
 
 <div class="question">
-朋友推薦熱門股票時
+<label>朋友推薦熱門股票時？</label>
 <select id="emotion3">
 <option value="1">直接跟單</option>
-<option value="3">研究後決定</option>
-<option value="5">依自己策略判斷</option>
+<option value="3">先研究再決定</option>
+<option value="5">依照自己策略判斷</option>
 </select>
 </div>
 
 </div>
 
-<!-- Financial Capacity -->
-
 <div class="section">
 <h2>3. Financial Capacity</h2>
 
 <div class="question">
-流動性需求
+<label>Liquidity Need</label>
 <select id="liquidity">
-<option value="1">一年內需要用到</option>
+<option value="1">一年內需要用錢</option>
 <option value="2">1-3年</option>
 <option value="3">3-5年</option>
 <option value="4">5年以上</option>
@@ -219,7 +216,7 @@ canvas{
 </div>
 
 <div class="question">
-負債狀況
+<label>Liabilities</label>
 <select id="debt">
 <option value="1">高負債</option>
 <option value="2">中高負債</option>
@@ -243,20 +240,24 @@ Analyze My Profile
 
 <script>
 
-let chart;
+let radarChart;
 
 function analyze(){
 
-const values=[
-age,income,wealth,horizon,goal,
-loss,tolerance,
-emotion1,emotion2,emotion3,
-liquidity,debt
-].map(id=>parseInt(document.getElementById(id).value));
+const ids = [
+"age","income","wealth","horizon","goal",
+"loss","tolerance",
+"emotion1","emotion2","emotion3",
+"liquidity","debt"
+];
 
-const total=values.reduce((a,b)=>a+b,0);
+let total = 0;
 
-const score=Math.round((total/60)*100);
+ids.forEach(id=>{
+total += parseInt(document.getElementById(id).value);
+});
+
+const score = Math.round((total/60)*100);
 
 let type="";
 
@@ -275,33 +276,36 @@ type="Aggressive Investor";
 
 let recommendation="";
 
-if(type==="Conservative Investor"){
-recommendation="股票20%、ETF20%、債券50%、現金10%";
-}
-else if(type==="Moderate Investor"){
-recommendation="股票40%、ETF30%、債券20%、現金10%";
-}
-else if(type==="Growth Investor"){
-recommendation="股票60%、ETF20%、債券10%、現金10%";
-}
-else{
-recommendation="股票80%、ETF10%、債券5%、現金5%";
+switch(type){
+case "Conservative Investor":
+recommendation="股票20%｜ETF20%｜債券50%｜現金10%";
+break;
+
+case "Moderate Investor":
+recommendation="股票40%｜ETF30%｜債券20%｜現金10%";
+break;
+
+case "Growth Investor":
+recommendation="股票60%｜ETF20%｜債券10%｜現金10%";
+break;
+
+default:
+recommendation="股票80%｜ETF10%｜債券5%｜現金5%";
 }
 
-document.getElementById("result").innerHTML=
-`
+document.getElementById("result").innerHTML = `
 <h2>Dynamic Investor Risk Profile</h2>
 
-<p><b>Baseline Risk Score：</b>${score}/100</p>
+<p><strong>Baseline Risk Score:</strong> ${score}/100</p>
 
-<p><b>Investor Type：</b>${type}</p>
+<p><strong>Investor Type:</strong> ${type}</p>
 
-<p><b>Personalized Recommendation：</b></p>
+<p><strong>Personalized Recommendation:</strong></p>
 
 <p>${recommendation}</p>
 `;
 
-let radarData=[
+const radarData = [
 parseInt(document.getElementById("tolerance").value),
 parseInt(document.getElementById("loss").value),
 parseInt(document.getElementById("emotion2").value),
@@ -309,18 +313,20 @@ parseInt(document.getElementById("liquidity").value),
 parseInt(document.getElementById("wealth").value)
 ];
 
-if(chart){
-chart.destroy();
+if(radarChart){
+radarChart.destroy();
 }
 
-chart=new Chart(document.getElementById("radarChart"),{
-type:"radar",
+radarChart = new Chart(
+document.getElementById("radarChart"),
+{
+type:'radar',
 data:{
 labels:[
 "Risk Tolerance",
 "Loss Capacity",
 "Emotional Stability",
-"Liquidity",
+"Liquidity Need",
 "Financial Capacity"
 ],
 datasets:[{
@@ -331,12 +337,11 @@ borderColor:"#0078d4",
 borderWidth:2
 }]
 }
-});
+}
+);
 
 }
-
 </script>
 
 </body>
 </html>
-
