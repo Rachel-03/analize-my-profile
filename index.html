@@ -10,76 +10,76 @@ https://cdn.jsdelivr.net/npm/chart.jsscript>
 
 <style>
 body{
-    font-family: Arial, sans-serif;
-    background:#f4f7fb;
-    margin:0;
-    padding:20px;
+font-family:Arial,sans-serif;
+background:#f4f7fb;
+margin:0;
+padding:20px;
 }
 
 .container{
-    max-width:1000px;
-    margin:auto;
-    background:white;
-    padding:25px;
-    border-radius:12px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
+max-width:1000px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
 h1{
-    text-align:center;
-    color:#003366;
+text-align:center;
+color:#003366;
 }
 
 .section{
-    border-left:5px solid #0078d4;
-    padding-left:15px;
-    margin-bottom:30px;
+border-left:5px solid #0078d4;
+padding-left:15px;
+margin-bottom:25px;
 }
 
 .question{
-    margin:15px 0;
+margin:15px 0;
 }
 
 label{
-    font-weight:bold;
-    display:block;
-    margin-bottom:5px;
+font-weight:bold;
+display:block;
+margin-bottom:5px;
 }
 
 select{
-    width:100%;
-    padding:10px;
-    border-radius:5px;
+width:100%;
+padding:10px;
+border-radius:5px;
 }
 
 button{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:8px;
-    background:#0078d4;
-    color:white;
-    font-size:18px;
-    cursor:pointer;
+width:100%;
+padding:15px;
+border:none;
+background:#0078d4;
+color:white;
+font-size:18px;
+border-radius:8px;
+cursor:pointer;
 }
 
 button:hover{
-    background:#005ea6;
+background:#005ea6;
 }
 
 #result{
-    margin-top:20px;
-    padding:20px;
-    border-radius:10px;
-    background:#eef6ff;
+margin-top:20px;
+padding:20px;
+background:#eef6ff;
+border-radius:10px;
 }
 
 canvas{
-    margin-top:20px;
+margin-top:20px;
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
@@ -147,11 +147,11 @@ canvas{
 <div class="question">
 <label>Loss Capacity</label>
 <select id="loss">
-<option value="1">無法接受損失</option>
+<option value="1">無法接受</option>
 <option value="2">很難接受</option>
 <option value="3">尚可接受</option>
-<option value="4">可以接受</option>
-<option value="5">完全可以接受</option>
+<option value="4">可接受</option>
+<option value="5">完全可接受</option>
 </select>
 </div>
 
@@ -165,23 +165,24 @@ canvas{
 <option value="5">非常積極</option>
 </select>
 </div>
+
 </div>
 
 <div class="section">
 <h2>2. Behavioral & Emotional Assessment</h2>
 
 <div class="question">
-<label>投資組合下跌20%時，你會？</label>
+<label>投資組合下跌20%時你會？</label>
 <select id="emotion1">
 <option value="1">全部賣出</option>
 <option value="2">部分賣出</option>
-<option value="3">繼續觀察</option>
+<option value="3">持有觀察</option>
 <option value="5">逢低加碼</option>
 </select>
 </div>
 
 <div class="question">
-<label>市場劇烈波動時，你的反應？</label>
+<label>市場劇烈波動時？</label>
 <select id="emotion2">
 <option value="1">非常焦慮</option>
 <option value="2">有點擔心</option>
@@ -194,8 +195,8 @@ canvas{
 <label>朋友推薦熱門股票時？</label>
 <select id="emotion3">
 <option value="1">直接跟單</option>
-<option value="3">先研究再決定</option>
-<option value="5">依照自己策略判斷</option>
+<option value="3">研究後決定</option>
+<option value="5">依自己策略</option>
 </select>
 </div>
 
@@ -207,7 +208,7 @@ canvas{
 <div class="question">
 <label>Liquidity Need</label>
 <select id="liquidity">
-<option value="1">一年內需要用錢</option>
+<option value="1">1年內</option>
 <option value="2">1-3年</option>
 <option value="3">3-5年</option>
 <option value="4">5年以上</option>
@@ -240,24 +241,38 @@ Analyze My Profile
 
 <script>
 
-let radarChart;
+let radarChart=null;
 
 function analyze(){
 
-const ids = [
-"age","income","wealth","horizon","goal",
-"loss","tolerance",
-"emotion1","emotion2","emotion3",
-"liquidity","debt"
+const ids=[
+"age",
+"income",
+"wealth",
+"horizon",
+"goal",
+"loss",
+"tolerance",
+"emotion1",
+"emotion2",
+"emotion3",
+"liquidity",
+"debt"
 ];
 
-let total = 0;
+let total=0;
 
 ids.forEach(id=>{
-total += parseInt(document.getElementById(id).value);
+
+const element=document.getElementById(id);
+
+if(element){
+total+=parseInt(element.value);
+}
+
 });
 
-const score = Math.round((total/60)*100);
+const score=Math.round((total/60)*100);
 
 let type="";
 
@@ -276,36 +291,32 @@ type="Aggressive Investor";
 
 let recommendation="";
 
-switch(type){
-case "Conservative Investor":
-recommendation="股票20%｜ETF20%｜債券50%｜現金10%";
-break;
-
-case "Moderate Investor":
-recommendation="股票40%｜ETF30%｜債券20%｜現金10%";
-break;
-
-case "Growth Investor":
-recommendation="股票60%｜ETF20%｜債券10%｜現金10%";
-break;
-
-default:
-recommendation="股票80%｜ETF10%｜債券5%｜現金5%";
+if(type==="Conservative Investor"){
+recommendation="股票20%、ETF20%、債券50%、現金10%";
+}
+else if(type==="Moderate Investor"){
+recommendation="股票40%、ETF30%、債券20%、現金10%";
+}
+else if(type==="Growth Investor"){
+recommendation="股票60%、ETF20%、債券10%、現金10%";
+}
+else{
+recommendation="股票80%、ETF10%、債券5%、現金5%";
 }
 
-document.getElementById("result").innerHTML = `
+document.getElementById("result").innerHTML=`
 <h2>Dynamic Investor Risk Profile</h2>
 
-<p><strong>Baseline Risk Score:</strong> ${score}/100</p>
+<p><b>Baseline Risk Score:</b> ${score}/100</p>
 
-<p><strong>Investor Type:</strong> ${type}</p>
+<p><b>Investor Type:</b> ${type}</p>
 
-<p><strong>Personalized Recommendation:</strong></p>
+<p><b>Recommended Asset Allocation:</b></p>
 
 <p>${recommendation}</p>
 `;
 
-const radarData = [
+const radarData=[
 parseInt(document.getElementById("tolerance").value),
 parseInt(document.getElementById("loss").value),
 parseInt(document.getElementById("emotion2").value),
@@ -317,16 +328,16 @@ if(radarChart){
 radarChart.destroy();
 }
 
-radarChart = new Chart(
+radarChart=new Chart(
 document.getElementById("radarChart"),
 {
-type:'radar',
+type:"radar",
 data:{
 labels:[
 "Risk Tolerance",
 "Loss Capacity",
 "Emotional Stability",
-"Liquidity Need",
+"Liquidity",
 "Financial Capacity"
 ],
 datasets:[{
