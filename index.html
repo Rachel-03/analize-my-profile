@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Investor Risk Assessment</title>
+
+https://cdn.jsdelivr.net/npm/chart.jsscript>
+
+<style>
+body{
+font-family:Arial;
+padding:30px;
+background:#f4f7fb;
+}
+
+.container{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:800px;
+margin:auto;
+}
+
+h1{
+text-align:center;
+color:#2c3e50;
+}
+
+.question{
+margin:15px 0;
+}
+
+button{
+background:#0078d4;
+color:white;
+padding:12px 20px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+#result{
+margin-top:20px;
+font-size:20px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Investor Risk Assessment</h1>
+
+<div class="question">
+年齡：
+<select id="q1">
+<option value="1">60以上</option>
+<option value="2">50-59</option>
+<option value="3">40-49</option>
+<option value="4">30-39</option>
+<option value="5">18-29</option>
+</select>
+</div>
+
+<div class="question">
+投資經驗：
+<select id="q2">
+<option value="1">無</option>
+<option value="2">1年以下</option>
+<option value="3">1-3年</option>
+<option value="4">3-5年</option>
+<option value="5">5年以上</option>
+</select>
+</div>
+
+<div class="question">
+投資期間：
+<select id="q3">
+<option value="1">1年以下</option>
+<option value="2">1-3年</option>
+<option value="3">3-5年</option>
+<option value="4">5-10年</option>
+<option value="5">10年以上</option>
+</select>
+</div>
+
+<div class="question">
+若虧損20%，你會？
+<select id="q4">
+<option value="1">全部賣出</option>
+<option value="2">部分賣出</option>
+<option value="3">觀察</option>
+<option value="4">繼續持有</option>
+<option value="5">加碼</option>
+</select>
+</div>
+
+<div class="question">
+財務能力：
+<select id="q5">
+<option value="1">很弱</option>
+<option value="2">弱</option>
+<option value="3">普通</option>
+<option value="4">良好</option>
+<option value="5">優秀</option>
+</select>
+</div>
+
+<button onclick="analyze()">
+Analyze My Profile
+</button>
+
+<div id="result"></div>
+
+<canvas id="radarChart"></canvas>
+
+</div>
+
+<script>
+
+let chart;
+
+function analyze(){
+
+let scores=[
+parseInt(document.getElementById("q1").value),
+parseInt(document.getElementById("q2").value),
+parseInt(document.getElementById("q3").value),
+parseInt(document.getElementById("q4").value),
+parseInt(document.getElementById("q5").value)
+];
+
+let total=scores.reduce((a,b)=>a+b,0);
+
+let percentage=Math.round(total/25*100);
+
+let type="";
+
+if(percentage<=30)
+type="Conservative Investor";
+else if(percentage<=50)
+type="Moderate Investor";
+else if(percentage<=70)
+type="Balanced Investor";
+else if(percentage<=85)
+type="Growth Investor";
+else
+type="Aggressive Investor";
+
+document.getElementById("result").innerHTML=
+`
+Risk Score: ${percentage}<br>
+Investor Type: ${type}
+`;
+
+if(chart){
+chart.destroy();
+}
+
+let ctx=document.getElementById('radarChart');
+
+chart=new Chart(ctx,{
+type:'radar',
+data:{
+labels:[
+'Age',
+'Experience',
+'Horizon',
+'Behavior',
+'Financial Capacity'
+],
+datasets:[{
+label:'Investor Profile',
+data:scores,
+fill:true
+}]
+}
+});
+}
+
+</script>
+
+</body>
+</html>
+
